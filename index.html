@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Saathi – Voice Scheme Assistant</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <span class="logo">🪔</span>
+      <div>
+        <h1>Saathi <small>साथी</small></h1>
+        <p id="tagline">Bolo, aur apni sarkari yojana jaano</p>
+      </div>
+    </div>
+    <div class="actions">
+      <button id="langBtn" class="ghost">English</button>
+      <button id="settingsBtn" class="ghost" title="Settings">⚙️</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="panel convo">
+      <div class="progress"><div id="progressBar"></div></div>
+      <div id="chat" aria-live="polite"></div>
+      <div id="chips"></div>
+      <div class="controls">
+        <button id="micBtn" class="mic" aria-label="Speak">🎤</button>
+        <form id="textForm">
+          <input id="textInput" placeholder="Type your answer…" autocomplete="off" />
+          <button type="submit">➤</button>
+        </form>
+      </div>
+      <p id="status" class="status"></p>
+    </section>
+
+    <section class="panel results hidden" id="results">
+      <div class="impact">
+        <div>
+          <span id="countLabel">Schemes found</span>
+          <strong id="schemeCount">0</strong>
+        </div>
+        <div>
+          <span id="valueLabel">Est. yearly cash benefit</span>
+          <strong id="annualValue">₹0</strong>
+        </div>
+      </div>
+      <div id="cards"></div>
+      <div class="send">
+        <input id="phone" placeholder="Mobile number (for SMS/WhatsApp)" inputmode="tel" />
+        <button id="sendBtn">📩 <span id="sendLabel">Send to my phone</span></button>
+      </div>
+      <button id="restartBtn" class="ghost wide">↺ <span id="restartLabel">Start again</span></button>
+      <p class="disclaimer" id="disclaimer"></p>
+    </section>
+  </main>
+
+  <dialog id="settings">
+    <form method="dialog">
+      <h2>Settings</h2>
+      <label>ElevenLabs API key <small>(stored only in this browser)</small>
+        <input id="elKey" type="password" placeholder="xi-api-key" />
+      </label>
+      <label>ElevenLabs voice ID
+        <input id="elVoice" placeholder="21m00Tcm4TlvDq8ikWAM" />
+      </label>
+      <label>n8n webhook URL
+        <input id="n8nUrl" placeholder="https://your-n8n/webhook/saathi" />
+      </label>
+      <p class="hint">Without an ElevenLabs key, Saathi uses the browser's built-in voice.</p>
+      <menu><button value="save" id="saveSettings">Save</button></menu>
+    </form>
+  </dialog>
+
+  <script src="schemes.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

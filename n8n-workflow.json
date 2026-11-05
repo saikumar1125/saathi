@@ -1,0 +1,69 @@
+{
+  "name": "Saathi – send scheme summary",
+  "nodes": [
+    {
+      "parameters": { "httpMethod": "POST", "path": "saathi", "responseMode": "responseNode", "options": { "allowedOrigins": "*" } },
+      "id": "webhook",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [0, 0],
+      "webhookId": "saathi"
+    },
+    {
+      "parameters": {
+        "jsCode": "const b = $input.first().json.body;\nconst lines = b.schemes.map((s, i) => `${i + 1}. ${s.name} – ${s.benefit}\\n   Docs: ${s.docs}\\n   Apply: ${s.where}`);\nconst header = b.language === 'hi' ? 'साथी: आपकी पात्र योजनाएँ' : 'Saathi: schemes you may be eligible for';\nreturn [{ json: { phone: '+91' + b.phone.slice(-10), message: header + '\\n\\n' + lines.join('\\n\\n'), count: b.schemes.length, submittedAt: b.submittedAt, answers: JSON.stringify(b.answers) } }];"
+      },
+      "id": "format",
+      "name": "Format message",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [220, 0]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://REPLACE-WITH-YOUR-SMS-OR-WHATSAPP-API/send",
+        "sendBody": true,
+        "bodyParameters": { "parameters": [
+          { "name": "to", "value": "={{ $json.phone }}" },
+          { "name": "text", "value": "={{ $json.message }}" }
+        ] }
+      },
+      "id": "send",
+      "name": "Send SMS / WhatsApp",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [440, -100]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": { "__rl": true, "mode": "url", "value": "REPLACE-WITH-GOOGLE-SHEET-URL" },
+        "sheetName": { "__rl": true, "mode": "name", "value": "Sheet1" },
+        "columns": { "mappingMode": "autoMapInputData" }
+      },
+      "id": "log",
+      "name": "Log to Google Sheet (impact dashboard)",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [440, 100]
+    },
+    {
+      "parameters": { "respondWith": "json", "responseBody": "={{ { ok: true, count: $('Format message').first().json.count } }}" },
+      "id": "respond",
+      "name": "Respond",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [660, 0]
+    }
+  ],
+  "connections": {
+    "Webhook": { "main": [[{ "node": "Format message", "type": "main", "index": 0 }]] },
+    "Format message": { "main": [[
+      { "node": "Send SMS / WhatsApp", "type": "main", "index": 0 },
+      { "node": "Log to Google Sheet (impact dashboard)", "type": "main", "index": 0 },
+      { "node": "Respond", "type": "main", "index": 0 }
+    ]] }
+  }
+}
