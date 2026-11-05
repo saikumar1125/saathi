@@ -1,6 +1,7 @@
 # Saathi (साथी): a voice-first government scheme assistant
 
 **Hackathon:** Hack Paradise, KAUSHALYA 2.0 (CSVTU Bhilai) · 8-hour build
+**🔗 Live demo:** https://saikumar1125.github.io/saathi/ (open in Chrome or Edge)
 **Prize targets:** Top 3 + **Best Project Built with ElevenLabs** + n8n sponsor angle
 
 ---
