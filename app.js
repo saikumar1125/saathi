@@ -14,8 +14,7 @@ const UI = {
     found: n => `बहुत बढ़िया! आप ${n} योजनाओं के लिए पात्र हो सकते हैं।`,
     none: "अभी कोई योजना मेल नहीं खाई। नज़दीकी CSC केंद्र पर संपर्क करें।",
     listen2: "सुनें", docs: "दस्तावेज़", where: "कहाँ आवेदन करें",
-    sent: "भेज दिया! आपको जल्द संदेश मिलेगा।", sendFail: "भेजने में दिक्कत आई। सेटिंग्स में n8n URL जाँचें।",
-    noWebhook: "पहले ⚙️ सेटिंग्स में n8n webhook URL डालें।",
+    sent: "भेज दिया! आपको जल्द संदेश मिलेगा।", sendFail: "भेजने में दिक्कत आई। दोबारा कोशिश करें।",
     disclaimer: "राशि अनुमानित है। आवेदन से पहले आधिकारिक पोर्टल पर पुष्टि करें।",
     noMic: "इस ब्राउज़र में आवाज़ पहचान नहीं है — Chrome या Edge इस्तेमाल करें, या लिखकर जवाब दें।",
   },
@@ -31,8 +30,7 @@ const UI = {
     found: n => `Great news! You may be eligible for ${n} schemes.`,
     none: "No schemes matched right now. Please visit your nearest CSC centre.",
     listen2: "Listen", docs: "Documents", where: "Where to apply",
-    sent: "Sent! You'll receive a message shortly.", sendFail: "Couldn't send. Check the n8n URL in settings.",
-    noWebhook: "Add your n8n webhook URL in ⚙️ settings first.",
+    sent: "Sent! You'll receive a message shortly.", sendFail: "Couldn't send. Please try again.",
     disclaimer: "Amounts are estimates. Verify on the official portal before applying.",
     noMic: "Speech recognition isn't supported here — use Chrome or Edge, or type your answer.",
   },
@@ -87,9 +85,9 @@ let answers = {};
 let step = -1;
 let matched = [];
 const settings = {
-  get key() { return localStorage.getItem("saathi.elKey") || ""; },
-  get voice() { return localStorage.getItem("saathi.elVoice") || "21m00Tcm4TlvDq8ikWAM"; },
-  get webhook() { return localStorage.getItem("saathi.n8n") || ""; },
+  key: CONFIG.elevenLabsKey,
+  voice: CONFIG.elevenLabsVoice || "21m00Tcm4TlvDq8ikWAM",
+  webhook: CONFIG.n8nWebhook,
 };
 const t = k => UI[lang][k];
 
@@ -271,7 +269,7 @@ function finish() {
 
 async function sendToPhone() {
   const phone = $("phone").value.replace(/\D/g, "");
-  if (!settings.webhook) { $("status").textContent = t("noWebhook"); return; }
+  if (!settings.webhook) return;
   if (phone.length < 10) { $("phone").focus(); return; }
   try {
     const res = await fetch(settings.webhook, {
@@ -315,14 +313,6 @@ $("textForm").onsubmit = e => { e.preventDefault(); handleAnswer($("textInput").
 $("langBtn").onclick = () => { lang = lang === "hi" ? "en" : "hi"; localStorage.setItem("saathi.lang", lang); start(); };
 $("restartBtn").onclick = start;
 $("sendBtn").onclick = sendToPhone;
-$("settingsBtn").onclick = () => {
-  $("elKey").value = settings.key; $("elVoice").value = localStorage.getItem("saathi.elVoice") || ""; $("n8nUrl").value = settings.webhook;
-  $("settings").showModal();
-};
-$("saveSettings").onclick = () => {
-  localStorage.setItem("saathi.elKey", $("elKey").value.trim());
-  localStorage.setItem("saathi.elVoice", $("elVoice").value.trim());
-  localStorage.setItem("saathi.n8n", $("n8nUrl").value.trim());
-};
+if (!settings.webhook) $("sendBox").style.display = "none";
 if ("speechSynthesis" in window) speechSynthesis.onvoiceschanged = () => {};
 start();

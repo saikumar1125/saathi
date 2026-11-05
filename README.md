@@ -44,15 +44,16 @@
 ## Run it
 
 1. Open `index.html` in **Chrome or Edge** (the mic needs `localhost` or https, so run `python -m http.server 8000` in this folder and open http://localhost:8000).
-2. ⚙️ Settings:
-   - **ElevenLabs API key** (free tier works). Optional voice ID; pick a Hindi-capable voice from the ElevenLabs Voice Library.
-   - **n8n webhook URL**: import `n8n-workflow.json` into n8n Cloud (free Pro licence from the sponsor), set your SMS/WhatsApp API and Google Sheet, activate, and paste the production webhook URL.
+2. Optional: edit `config.js`:
+   - **elevenLabsKey** (free tier works) and **elevenLabsVoice**; pick a Hindi-capable voice from the ElevenLabs Voice Library. The key is public once pushed, so use a restricted key with a credit limit.
+   - **n8nWebhook**: import `n8n-workflow.json` into n8n Cloud (free Pro licence from the sponsor), set your SMS/WhatsApp API and Google Sheet, activate, and paste the production webhook URL. "Send to my phone" only appears when this is set.
 3. Press 🎤 and answer.
 
 ## Files
 
 - `index.html`, `styles.css`: UI
 - `app.js`: conversation flow, Hindi/English speech parsing, ElevenLabs TTS, n8n call
+- `config.js`: ElevenLabs key/voice and n8n webhook URL
 - `schemes.js`: eligibility rules (edit/add schemes here)
 - `n8n-workflow.json`: Webhook → format → SMS/WhatsApp + Google Sheet → respond
 

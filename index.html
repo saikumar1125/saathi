@@ -17,7 +17,6 @@
     </div>
     <div class="actions">
       <button id="langBtn" class="ghost">English</button>
-      <button id="settingsBtn" class="ghost" title="Settings">⚙️</button>
     </div>
   </header>
 
@@ -48,7 +47,7 @@
         </div>
       </div>
       <div id="cards"></div>
-      <div class="send">
+      <div class="send" id="sendBox">
         <input id="phone" placeholder="Mobile number (for SMS/WhatsApp)" inputmode="tel" />
         <button id="sendBtn">📩 <span id="sendLabel">Send to my phone</span></button>
       </div>
@@ -57,23 +56,7 @@
     </section>
   </main>
 
-  <dialog id="settings">
-    <form method="dialog">
-      <h2>Settings</h2>
-      <label>ElevenLabs API key <small>(stored only in this browser)</small>
-        <input id="elKey" type="password" placeholder="xi-api-key" />
-      </label>
-      <label>ElevenLabs voice ID
-        <input id="elVoice" placeholder="21m00Tcm4TlvDq8ikWAM" />
-      </label>
-      <label>n8n webhook URL
-        <input id="n8nUrl" placeholder="https://your-n8n/webhook/saathi" />
-      </label>
-      <p class="hint">Without an ElevenLabs key, Saathi uses the browser's built-in voice.</p>
-      <menu><button value="save" id="saveSettings">Save</button></menu>
-    </form>
-  </dialog>
-
+  <script src="config.js"></script>
   <script src="schemes.js"></script>
   <script src="app.js"></script>
 </body>
